@@ -1,0 +1,223 @@
+{% include "store/base.html" %}
+{% load static %}
+{% block content %}
+
+<main class="pt-5">
+
+  <div class="container">
+    <div class="row mb-5 bg-light rounded shadow">
+      <div class="col-md-6 ps-5 pt-4">
+        <h2 class="h4">Order Details</h2>
+        <p><strong>Full Name:&nbsp;{{ Main_Order.full_name }}</strong></p>
+        <p><strong>Email:&nbsp;{{ Main_Order.email }}</strong></p>
+        <p><strong>Shipping Address:</strong></p>
+        <address>
+          <strong>{{ Main_Order.shipping_address }}</strong>
+        </address>
+      </div>
+      <div class="col-md-6 pt-4 text-end">
+        <h2 class="h4">Order Summary</h2>
+        <p><strong>Total: <span id="order-total"><strong><h4>{{ Main_Order.amount_paid }}$</h4></strong></span></p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <h2 class="h4 mb-3">Order Items</h2>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Product</th>
+              <th scope="col"></th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Unit Price</th>
+              <th scope="col">Total price</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in Order_Item %}
+            <tr>
+              <td class="col-md-3 col-lg-2 order-md-first bg-light">
+                <img class="img-fluid mx-auto d-block" width="150px" alt="Responsive image" src="{{ item.product.image.url }}">
+              </td>
+              <td><a href="{% url 'product-info' item.product.slug %}" ><strong><h5>{{ item.product.title }}</h5></strong></a></td>
+              <td>{{ item.quantity }}</td>
+              <td>${{ item.price }}</td>
+              <td>${{ item.total_item_price }}</td>
+            </tr>
+          {% endfor %}
+          
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row mt-5 ">
+      <div class="col-25 text-right">
+          <div class="d-flex justify-content-center">
+              <div id="paypal-button-container" class="w-25"></div> <!-- Ensure this div exists -->
+          </div>
+      </div>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=Aboe3T79DjPei9iXRAyzbx3EQJevz7bGdM8YLFIrjANM3SL3973HzKEYnoIEiBmx-1LJrow_qu9M8KE8&currency=USD&intent=capture&enable-funding=venmo" data-sdk-integration-source="integrationbuilder"></script>
+
+<script>
+
+const paypalButtonsComponent = paypal.Buttons({
+  // optional styling for buttons
+  // https://developer.paypal.com/docs/checkout/standard/customize/buttons-style-guide/
+  style: {
+    color: "blue",
+    shape: "pill",
+    layout: "vertical",
+    
+  },
+
+  // set up the transaction
+  createOrder: (data, actions) => {
+    // pass in any options from the v2 orders create call:
+    // https://developer.paypal.com/api/orders/v2/#orders-create-request-body
+    const createOrderPayload = {
+      purchase_units: [
+        {
+          amount: {
+            value: '{{cart.total_cost}}'
+          }
+        }
+      ]
+    };
+
+    return actions.order.create(createOrderPayload);
+  },
+
+  // finalize the transaction
+  onApprove: (data, actions) => {
+    const captureOrderHandler = (details) => {
+      const payerName = details.payer.name.given_name;
+      console.log('Transaction completed');
+
+      // AJAX functionality copied from below(no change) and added to this default script provided by Paypal
+
+      $.ajax({
+
+        type: 'POST',
+        url: '{% url "save_order" %}',
+        data: {
+
+            full_name: "{{ Main_Order.full_name }}",
+            email: "{{ Main_Order.email }}",
+            amount_paid: "{{ Main_Order.amount_paid }}",
+
+            csrfmiddlewaretoken: "{{csrf_token}}",
+            action: 'post'
+
+        },
+
+        success: function(json){
+
+          // redirecting to payment success after submitting the the data
+
+          window.location.replace("{% url 'payment-success' %}");
+
+
+        },
+
+        error: function(xhr, errmsg, err){
+
+          window.location.replace("{% url 'payment-failed' %}");    
+
+        }
+
+    });
+
+
+
+    };
+
+    return actions.order.capture().then(captureOrderHandler);
+  },
+
+  // handle unrecoverable errors
+  onError: (err) => {
+    console.error('An error prevented the buyer from checking out with PayPal');
+  }
+});
+
+paypalButtonsComponent
+  .render("#paypal-button-container")
+  .catch((err) => {
+    console.error('PayPal Buttons failed to render');
+  });
+
+</script>
+
+</main>
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+<!-- <script>
+
+  // SEE THIS SAME PART OF AJAX WILL BE USED AS A PART OF PAYPAL OnApprove part AND THERE WONT BE ANY CHANGE
+  
+
+
+  $(document).on('click', '#proceed-to-payment', function(e){
+
+      e.preventDefault();
+
+      $.ajax({
+
+          type: 'POST',
+          url: '% url "save_order" %}',
+          data: {
+
+              full_name: "{ Main_Order.full_name }}",
+              email: "{ Main_Order.email }}",
+              amount_paid: "{ Main_Order.amount_paid }}",
+
+              csrfmiddlewaretoken: "{csrf_token}}",
+              action: 'post'
+
+          },
+
+          success: function(json){
+
+            // redirecting to payment success after submitting the the data
+
+            window.location.replace("% url 'payment-success' %}");
+
+
+          },
+
+          error: function(xhr, errmsg, err){
+
+            window.location.replace("% url 'payment-failed' %}");    
+
+          }
+
+      });
+
+
+  })
+
+
+
+</script> -->
+

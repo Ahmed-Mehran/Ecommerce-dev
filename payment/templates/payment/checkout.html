@@ -1,0 +1,74 @@
+{% include "store/base.html" %}
+
+
+{% load static %}
+
+{% block content %}
+
+
+{% load crispy_forms_tags %}
+
+
+    <style>
+
+
+        body{
+
+            background-color: lightgray;
+        }
+
+
+    </style>
+
+    <br>
+
+    <div class="container bg-white shadow-md p-5 form-layout" >
+
+
+    
+        <h2><i class="fa fa-caret-right" aria-hidden="true"></i> &nbsp; Complete your order</h2>
+
+        
+        <h6><strong>Please enter in the relevant information below</strong></h6>
+
+
+        
+        
+        <hr>
+        <br>
+
+
+        <form method="POST" autocomplete="off">
+
+            {% csrf_token %}
+
+            {{CheckoutForm|crispy}}
+
+            <br> 
+
+            <button class="btn btn-primary btn-md w-100 btn-block p-3" type="submit">  &nbsp; Submit </button>
+
+           
+            
+
+
+        </form>
+
+       
+
+            
+            
+        <br>
+            
+    
+
+    </div>
+
+    <br>
+
+    
+    <br>
+
+
+
+{% endblock %}
