@@ -1,0 +1,63 @@
+{% include "store/base.html" %}
+
+
+{% load static %}
+
+{% block content %}
+
+
+{% load crispy_forms_tags %}
+
+
+    <style>
+
+
+        body{
+
+            background-color: lightgray;
+        }
+
+
+    </style>
+
+    <br>
+
+    <div class="container bg-white shadow-md p-5 form-layout">
+
+        <h3> Shipping Address Details </h3>
+
+        
+        
+        <hr>
+        <br>
+
+
+        <form method="POST" autocomplete="off">
+
+            {% csrf_token %}
+
+            {{form|crispy}}
+
+            <br> 
+
+            <button class="btn btn-primary btn-md w-100 btn-block p-3" type="submit">  &nbsp; Submit </button>
+
+
+        </form>
+
+            
+            
+        <br>
+            
+    
+
+    </div>
+
+    <br>
+
+    
+    <br>
+
+
+
+{% endblock %}

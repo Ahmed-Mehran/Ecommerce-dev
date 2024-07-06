@@ -1,0 +1,84 @@
+
+
+{% include "store/base.html" %}
+
+
+{% load static %}
+
+{% block content %}
+
+
+    <style>
+
+
+        body{
+
+            background-color: lightgray;
+        }
+
+
+    </style>
+
+    <body>
+
+        <br>
+
+        <div class="container bg-white shadow-md p-5 form-layout">
+
+            <h2> Welcome  {{user}} </h2>
+            <hr>
+
+            <h5> <strong> This is your dashboard  </strong> </h5>
+            
+            <br>
+            <br>
+
+            
+
+        </div>
+
+        <br>
+        <br>
+
+
+        <div class="container bg-white shadow-md p-5 form-layout">
+
+            <h4> Track your orders here </h4>
+
+            <br>
+            <br>
+
+
+
+
+            <hr>
+            <a href="{% url 'my-orders' %}" class="btn btn-primary my-2"> My orders </a> 
+
+            <br>
+            <a href="{% url 'manage-shipping' %}" class="btn btn-primary my-2"> Manage Shipping </a> 
+
+        </div>
+
+        <br>
+        <br>
+
+        <div class="container bg-white shadow-md p-5 form-layout">
+
+            <h4> Manage your account </h4>
+
+            <br>
+            <br>
+
+
+
+            <hr>
+            <a href="{% url 'profile-management' %}" class="btn btn-primary my-2"> Profile management </a> 
+            <br>
+
+
+        </div>
+
+    </body>
+
+
+{% endblock %}

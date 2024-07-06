@@ -1,0 +1,71 @@
+
+{% include "store/base.html" %}
+
+
+{% load static %}
+
+{% block content %}
+
+
+{% load crispy_forms_tags %}
+
+
+    <style>
+
+
+        body{
+
+            background-color: lightgray;
+        }
+
+
+    </style>
+
+    <br>
+
+    <div class="container bg-white shadow-md p-5 form-layout">
+
+        <h3> Create your account </h3>
+
+        
+        
+        <br>
+        <br>
+
+
+        <form method="POST" autocomplete="off">
+
+            {% csrf_token %}
+
+            {{RegistrationForm|crispy}}
+
+            <br> 
+
+            <button class="btn btn-secondary btn-md w-100 btn-block p-3" type="submit">  &nbsp; Create account </button>
+            
+
+
+        </form>
+
+            <br> 
+
+            <div class="text-center">
+
+                <a href="{% url 'my-login' %}">  Already have an account? </a>
+
+            </div>
+
+
+    </div>
+
+    <br>
+
+
+
+
+
+
+
+{% endblock %}
+
+
